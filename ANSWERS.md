@@ -2,84 +2,85 @@
 
 ---
 
-## 1. How to Run
+## 1. How to Run the App
 
-**Prerequisites:** Node.js 18+, npm 9+
+**What you need first:** Node.js 18 or newer, npm 9 or newer (they come together, so download Node and you're good).
 
+**To run it locally:**
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Then open your browser and go to [http://localhost:5173](http://localhost:5173). You should see the habit tracker app.
 
-To build for production:
+**To build for the web:**
 ```bash
 npm run build
 npm run preview
 ```
 
+This creates a production version that's optimized and ready to deploy to the internet.
+
 ---
 
 ## 2. Stack & Design Choices
 
-**Stack: React 18 + Vite + plain CSS (no component library, no Tailwind)**
+**What I Used: React 18 + Vite + Regular CSS (No frameworks like Tailwind)**
 
-I chose React because the UI has several pieces of independent state that need to stay in sync — the week offset, the habit list, and the checked state all live in different places but drive the same grid. React's component model makes those relationships explicit and easy to follow. Vite gives near-instant HMR during development, which mattered a lot when I was iterating on the grid layout.
+Why React? The app has a lot of moving parts — the week you're viewing, your list of habits, and which days you've checked off. React keeps all these pieces working together smoothly. When you click a checkbox, the whole grid updates instantly. When you switch weeks, the calendar changes without confusion. Vite is the build tool that makes development super fast — I could change the layout and see it refresh in my browser immediately.
 
-I deliberately avoided Tailwind and UI libraries. For a visual-design-heavy submission like this, utility classes would have obscured the intentional design decisions. Every CSS property I wrote is there on purpose.
+Why no Tailwind or component libraries? This app is all about the design. The colors, spacing, and layout are very intentional. If I used utility classes or pre-built components, that careful design would get hidden. I wanted to write clean CSS that anyone can read.
 
-**Design decision 1 — Dark background with a single lime-green accent (`#c8f564`)**
+**Design Choice 1 — Clean white background with bright lime-green checkmarks**
 
-The grid lives or dies on whether you can instantly see "checked vs unchecked." I chose a dark background (`#0f0f11`) so the bright lime checkmarks have maximum contrast against the surface. Every other color in the interface is desaturated — the accent is the only saturated hue. This means your eye goes exactly where the data is: to the checked cells and the streak count. The today column gets a subtle tint of the same accent color so you always know where you are in the week at a glance.
+The most important thing about a habit tracker is: can you instantly see which days you completed your habit? I used a white background so the bright lime-green (#c8f564) checkmarks pop off the screen and grab your attention immediately. Everything else is neutral colors (grays and blacks), so your eye naturally goes to the green checked boxes and the streak numbers. The day you're looking at (today) gets a very light green tint so you always know where you are in the week without thinking about it.
 
-*This affects: the entire grid, specifically the `check-btn.checked` state and the `today` column highlight.*
+**Design Choice 2 — Checkboxes stay the same size, habit names stretch**
 
-**Design decision 2 — Fixed 44px day columns with a flexible habit name column**
+I used a CSS trick (called Grid) to make sure the checkboxes are always 44 pixels wide and perfectly aligned, no matter how long your habit name is. If your habit is called "Practice piano for 30 minutes," the checkbox size doesn't change — only the name text gets shorter with "...". This keeps the table neat and easy to scan, whether you have 3 habits or 20.
 
-I used CSS Grid with `grid-template-columns: minmax(140px, 1fr) repeat(7, 44px) 60px`. The day columns are fixed-width so the checkboxes are always the same size and aligned perfectly regardless of how long the habit names are. The habit name column gets all the leftover space and truncates with an ellipsis if needed. This means the grid stays usable whether you have 3 habits or 15 — the checkboxes don't shift, the streak column doesn't move, and everything reads as a proper data table.
-
-*This affects: the `.grid-header` and `.habit-row` layout across all screen sizes.*
-
-**Week starts on Monday** because I track habits around work/school weeks. A Monday–Sunday week keeps the "productive days" (Mon–Fri) on the left where your eye lands first, and the weekend is clearly a distinct block on the right. Starting on Sunday would put Sunday and Saturday on opposite ends of the row, which fragments the weekend visually and makes it harder to reason about "how did I do this weekend."
+**Why Monday is the first day of the week** — Most of us think about habits around our work/school week. Monday to Sunday makes sense because all the "busy days" (Mon–Fri) are on the left side where you look first, and the weekend is clearly grouped on the right. This makes it easier to see your weekly patterns at a glance.
 
 ---
 
-## 3. Responsive & Accessibility
+## 3. Mobile-Friendly & Accessible Design
 
-**Responsive behavior:**
+**How it works on different screen sizes:**
 
-On a **360px phone**, the grid column template shrinks to `minmax(90px, 1fr) repeat(7, 34px) 44px`. Checkboxes drop from 32px to 26px, day labels shrink slightly, and horizontal padding is reduced. The full 7-day grid stays visible — I deliberately chose not to hide days on mobile because hiding days would break the core promise of the app (see your whole week at a glance). The habit name truncates if it's long, which is an acceptable tradeoff.
+On your **phone (360px wide)**, the checkboxes shrink a little bit (26px instead of 44px), the labels get smaller, and everything gets tighter. But the full 7-day week is still visible — I didn't hide any days, because the whole point is to see your whole week at a glance. If your habit name is long, it gets cut off with "...", which is a fair tradeoff on a small screen.
 
-On a **1440px laptop**, the grid column expands naturally — the habit name column grows via `minmax` and the rest stays proportional. There's no wasted space and no stretched checkboxes.
+On your **desktop (1440px wide)**, everything has plenty of breathing room. The habit name column grows to fill the space, checkboxes stay big and easy to click, and there's no wasted empty space. The table looks perfectly balanced.
 
-**Accessibility — what I handled:**
+**Making it keyboard-friendly:**
 
-Keyboard navigation is fully supported throughout. Every interactive element (add button, day checkboxes, habit name rename button, delete button, week nav) is reachable and operable with Tab and Enter/Space. I used `:focus-visible` (not `:focus`) so keyboard users get a clear lime outline while mouse users don't see distracting rings on click. ARIA labels are on all icon-only buttons (`aria-label="Delete habit: Exercise"`). The check buttons use `aria-pressed` to communicate their toggled state to screen readers. The grid uses `role="grid"`, `role="row"`, `role="columnheader"`, `role="rowheader"`, and `role="gridcell"` for semantic structure.
+You can use your keyboard to navigate the whole app. Press Tab to move between buttons, Enter or Space to click them. When you tab to something, you see a clear lime-green outline so you know where you are. (Mouse users don't see the outline when they click, so the interface stays clean for them.)
 
-**Accessibility — what I knowingly skipped:**
+Every button that only shows an icon (like the delete button) has a text label attached so screen readers can say what it does. The checkboxes tell screen readers if they're checked or not. The whole grid is organized with proper HTML roles (`role="grid"`, `role="row"`, etc.) so assistive technology understands the structure.
 
-I did not add a skip-to-content link. On a long habits list, a keyboard user would need to Tab through the header and nav before reaching the grid. With more time I'd add a visually hidden `<a href="#grid">Skip to grid</a>` at the top of the page. I skipped it because the app is single-page and relatively shallow — it's a lower-priority gap than the grid semantics I did implement.
+**One thing I didn't get to:**
 
----
-
-## 4. AI Usage
-
-I used Claude (claude.ai) during this project in the following places:
-
-**a) Initial project scaffolding**
-I asked Claude to generate the folder structure and boilerplate for a React + Vite project without Tailwind. It gave me a standard setup. I kept it mostly as-is but removed the default Vite demo content and reorganized the `src/` folder into `components/` and `hooks/` myself, because I wanted the separation of concerns to be explicit.
-
-**b) The streak calculation logic in `useHabits.js`**
-I asked Claude to write a function that calculates a consecutive-day streak. It gave me a version that always started from today and stopped if today was unchecked. I changed it so that if today is unchecked, it still looks backward from yesterday — because it's often not yet the end of the day when you open the app, and a streak of 0 just because you haven't ticked today yet felt punishing and inaccurate. The actual behavior users experience is: your streak survives today being unchecked until midnight.
-
-**c) CSS Grid column definition**
-I asked for help thinking through how to keep day columns fixed-width while letting the habit name be flexible. The AI suggested `grid-template-columns: 200px repeat(7, 1fr) 80px`. I changed it to `minmax(140px, 1fr) repeat(7, 44px) 60px` because fixed `1fr` day columns would stretch awkwardly on wide screens, and a fixed 200px name column would overflow on 360px phones. The `minmax` approach is more robust across screen sizes.
+Ideally, if you have a very long list of habits, there should be a "skip to habits" link at the top of the page so keyboard users don't have to tab through the header every time. I skipped this because the app is small and this was a lower priority than the other accessibility features.
 
 ---
 
-## 5. Honest Gap
+## 4. Where I Got Help from AI
 
-The weakest part of my submission is the **mobile experience when a user has many habits (10+)**. The habit name cell truncates with an ellipsis, but there's no way to see the full name without entering rename mode. On desktop, hovering reveals the delete button and a title tooltip, but on mobile there's no hover state, so the delete button only appears after you've already tapped into the name.
+I used Claude AI in a few places to speed things up:
 
-With another day, I'd add a long-press or swipe-left gesture on mobile to reveal a delete/rename action menu for each habit row, similar to how iOS handles list items. I'd also consider adding a small "today's completion" summary line at the top — e.g., "3 of 5 habits done today" — because on a narrow phone the grid can feel dense and a quick summary gives the user confidence without scanning the whole table.
+**a) Getting the project started**
+Claude helped me set up the React + Vite folder structure. I took what it gave me and then reorganized it myself because I wanted the code to be clear and easy to navigate. I split things into `/components` and `/hooks` folders so each part has a specific job.
+
+**b) The streak calculation**
+I asked Claude to write the code that counts "how many days in a row have you done this habit?" It gave me something that worked, but I tweaked it. The original would say your streak was 0 if you hadn't checked today yet, even if it's still morning. I changed it so your streak only resets at midnight — because it's not fair to lose your streak just because you haven't opened the app yet today.
+
+**c) The grid layout**
+I was trying to figure out how to keep the checkboxes always the same size while letting the habit names stretch or shrink. Claude suggested one approach, but I improved it. I used `minmax()` to make the layout smarter — habit names can be small or large depending on your screen size, and the checkboxes always stay perfect.
+
+---
+
+## 5. What Could Be Better
+
+**The weak spot:** On your phone with lots of habits (10+), it's hard to see the full habit name if it's long. The text gets cut off with "...", but you can't see the full name unless you tap to rename it. On desktop, you can hover your mouse to see the full name, but on mobile there's no hover.
+
+**What I'd do next:** Add a swipe-left gesture (like in iOS Mail) to show a delete or rename menu for each habit. Also, I'd add a quick summary at the top like "You've completed 3 out of 5 habits today" so on a small phone screen you don't have to look at the whole grid to feel like you know how you're doing.
