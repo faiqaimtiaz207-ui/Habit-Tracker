@@ -37,10 +37,7 @@ export default function App() {
             <div className="logo-mark" aria-hidden="true">◆</div>
             <div>
               <h1 className="app-title">Habits</h1>
-               <p className="app-subtitle">
-                 <span className="subtitle-bold">Build streaks.</span>
-                 <span className="subtitle-green"> Stay consistent. 🌱</span>
-               </p>
+              <p className="app-subtitle">Build streaks. Stay consistent.</p>
             </div>
           </div>
 
@@ -48,7 +45,7 @@ export default function App() {
             {topStreakHabit ? (
               <>
                 <span className="streak-label">TOP STREAK</span>
-                <span className="streak-title">🔥 {topStreakHabit.habit.name}</span>
+                <span className="streak-title"><span className="fire" aria-hidden="true">🔥</span>{topStreakHabit.habit.name}</span>
                 <span className="streak-days">{topStreakHabit.streak} days</span>
               </>
             ) : (
@@ -125,7 +122,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Click a habit name to rename it.</p>
+        <p>Click a habit name to rename it. Data is saved in your browser.</p>
       </footer>
     </div>
   )

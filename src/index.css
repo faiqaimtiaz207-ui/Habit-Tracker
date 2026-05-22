@@ -24,6 +24,7 @@
 
   --pink: #ff6b9d;
   --pink-light: #ffb3d9;
+  --green: #1a6b2e;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -84,9 +85,13 @@ input {
 
 /* ─── Header ─────────────────────────────────────────────────── */
 .app-header {
-  padding: 40px 0 32px;
-  border-bottom: 1px solid var(--border);
+  padding: 44px 0 28px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
   margin-bottom: 32px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 6px 24px rgba(16,24,32,0.04);
 }
 
 .header-inner {
@@ -105,10 +110,17 @@ input {
 }
 
 .logo-mark {
-  font-size: 28px;
-  color: var(--accent);
+  font-size: 34px;
+  color: var(--accent-dim);
   line-height: 1;
   flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-bg-strong), rgba(255,255,255,0.7));
+  box-shadow: 0 6px 14px rgba(16,24,32,0.06);
 }
 
 /* Allow the title block to shrink on narrower containers */
@@ -117,16 +129,33 @@ input {
   min-width: 0;
 }
 
+.app-title {
+  display: block;
+}
+
+.app-subtitle {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 .streak-highlight {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  padding: 12px 20px;
-  background: var(--surface);
+  gap: 6px;
+  padding: 12px 18px;
+  background: linear-gradient(180deg, var(--surface), #ffffff);
   border: 1px solid var(--border);
   border-radius: 12px;
   min-width: 0;
+  box-shadow: 0 8px 20px rgba(12,18,24,0.06);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.streak-highlight:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(12,18,24,0.09);
 }
 
 .streak-highlight .streak-label {
@@ -138,9 +167,21 @@ input {
 }
 
 .streak-highlight .streak-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.streak-highlight .streak-title .fire {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(180deg, rgba(255,230,200,0.9), rgba(255,245,220,0.9));
 }
 
 .streak-highlight .streak-days {
@@ -199,7 +240,7 @@ input {
 
 .app-subtitle {
   font-size: 0.8rem;
-  color: var(--green);
+  color: var(--text-muted);
   font-weight: 400;
   margin-top: 4px;
   font-family: var(--font-mono);
@@ -240,9 +281,8 @@ input {
 }
 
 .subtitle-green {
-  color: #1a6b2e;
-  transition: border-color var(--transition), box-shadow var(--transition);
-  color: var(--text-muted);
+  color: var(--green);
+  font-weight: 400;
 }
 
 .add-habit-input:focus {
