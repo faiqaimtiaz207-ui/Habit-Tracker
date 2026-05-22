@@ -37,3 +37,4 @@ npm run preview
 - Full persistence via localStorage
 - Responsive: works on 360px phones to 1440px desktops
 - Keyboard accessible throughout
+- “Top streak” panel in the header plus a weekly completion bar report 
