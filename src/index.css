@@ -191,7 +191,12 @@ input {
 
 @media (max-width: 768px) {
   .streak-highlight {
-    display: none;
+    display: flex;
+    width: 100%;
+    padding: 8px 12px;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
   }
 }
 
@@ -885,7 +890,7 @@ input {
   /* On mobile, collapse day columns to be smaller */
   .grid-header,
   .habit-row {
-    grid-template-columns: minmax(90px, 1fr) repeat(7, 34px) 44px;
+    grid-template-columns: minmax(70px, 1fr) repeat(7, 30px) 40px;
   }
 
   .check-btn {
@@ -925,6 +930,28 @@ input {
 
   .streak-fire {
     font-size: 0.75rem;
+  }
+
+  /* Compact streak card styling for mobile */
+  .streak-highlight {
+    display: flex;
+    width: 100%;
+    padding: 8px 12px;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .streak-highlight .streak-label {
+    font-size: 0.58rem;
+  }
+
+  .streak-highlight .streak-title {
+    font-size: 0.9rem;
+  }
+
+  .streak-highlight .streak-days {
+    font-size: 1.1rem;
   }
 
   .streak-badge.active {
